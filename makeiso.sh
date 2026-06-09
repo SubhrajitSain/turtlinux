@@ -49,7 +49,7 @@ sudo podman run \
   -v ./output:/output \
   quay.io/centos-bootc/bootc-image-builder:latest \
   --type iso \
-  "$TARGET_IMAGE"; then
+  "$TARGET_IMAGE"
 
 echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
 echo -e "${GREEN}Finished, check ./iso for your TurtLinux ISO."
