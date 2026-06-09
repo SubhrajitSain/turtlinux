@@ -1,5 +1,5 @@
 # Fedora Kinoite
-FROM quay.io/fedora-ostree-desktops/kinoite:latest
+FROM quay.io/fedora-ostree-desktops/kinoite:45
 
 # Install packages
 RUN dnf install -y libreoffice java-latest-openjdk kdenlive discord && dnf clean all
