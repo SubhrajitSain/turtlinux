@@ -47,7 +47,7 @@ if sudo podman run \
   -it \
   --privileged \
   -v ./iso:/iso \
-  -v /var/lib/containers/storage:/var/lib/containers/storage
+  -v /var/lib/containers/storage:/var/lib/containers/storage \
   quay.io/centos-bootc/bootc-image-builder:latest \
   --type iso \
   "$TARGET_IMAGE"
