@@ -10,9 +10,9 @@ NC='\033[0m' # no color (reset)
 
 mkdir -p ./iso
 
-echo -e "${LIGHT_GREEN}/=================================\\${NC}"
+echo -e "${LIGHT_GREEN}===================================${NC}"
 echo -e "${LIGHT_GREEN}|${GREEN}      Turtlinux ISO Maker        ${LIGHT_GREEN}|${NC}"
-echo -e "${LIGHT_GREEN}\\================================/${NC}"
+echo -e "${LIGHT_GREEN}==================================${NC}"
 echo ""
 echo -e "${GREEN}Select the flavor you wish to build:${NC}"
 echo "+-----------------\\ /----------------------------------------------------+"
@@ -20,7 +20,7 @@ echo "| FLAVOR           | URL                                                 |
 echo "+------------------+-----------------------------------------------------+"
 echo "| 1 - Latest Rel.  | https://ghcr.io/ingStudiosOfficial/turtlinux:latest |"
 echo "| 2 - Development  | https://ghcr.io/SubhrajitSain/turtlinux:latest      |"
-echo "+-----------------/ \\---------------------------------------------------+"
+echo "+-----------------/ \\----------------------------------------------------+"
 echo ""
 read -p "Enter selection [1-2]: " choice
 
