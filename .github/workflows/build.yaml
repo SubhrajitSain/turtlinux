@@ -18,4 +18,6 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Push Image to GHCR
-        run: podman push ${{ env.IMAGE_NAME }}:latest
+        run: |
+          IMAGE_PATH=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          podman push $IMAGE_PATH:latest
