@@ -60,17 +60,7 @@ echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
 echo -e "${GREEN}Making your TurtLinux ISO...${NC}"
 echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
 
-if sudo podman run \
-  --rm \
-  -it \
-  --privileged \
-  -v ./iso:/iso \
-  -v /var/lib/containers/storage:/var/lib/containers/storage \
-  quay.io/centos-bootc/bootc-image-builder:latest \
-  --type iso \
-  --rootfs btrfs \
-  --output /iso \
-  "$TARGET_IMAGE"
+if sudo podman run --rm -it --privileged -v ./iso:/iso -v /var/lib/containers/storage:/var/lib/containers/storage quay.io/centos-bootc/bootc-image-builder:latest --type iso --rootfs btrfs --output /iso "$TARGET_IMAGE"
 then
     echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
     echo -e "${GREEN}Cleaning up...${NC}"
