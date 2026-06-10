@@ -69,6 +69,7 @@ if sudo podman run \
   quay.io/centos-bootc/bootc-image-builder:latest \
   --type iso \
   --rootfs btrfs \
+  --output /iso \
   "$TARGET_IMAGE"
 then
     echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
