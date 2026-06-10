@@ -68,6 +68,7 @@ if sudo podman run \
   -v /var/lib/containers/storage:/var/lib/containers/storage \
   quay.io/centos-bootc/bootc-image-builder:latest \
   --type iso \
+  --rootfs btrfs \
   "$TARGET_IMAGE"
 then
     echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
