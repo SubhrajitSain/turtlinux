@@ -2,8 +2,9 @@ import 'package:grpc/grpc.dart';
 import 'package:turtagent/generated/protobuf/turtagent.pbgrpc.dart';
 
 class AgentRpcService {
-  late ClientChannel _channel;
-  late TurtAgentStreamServiceClient _client;
+  late final ClientChannel _channel;
+  late final TurtAgentStreamServiceClient _client;
+  ResponseStream<PromptResponse>? _currentStream;
 
   AgentRpcService() {
     _channel = ClientChannel(
@@ -15,12 +16,14 @@ class AgentRpcService {
   }
 
   Stream<String> streamPrompt(String userPrompt) async* {
+    await cancelCurrentStream();
+
     final request = PromptRequest()..prompt = userPrompt;
 
     try {
-      final responseStream = _client.generateResponse(request);
+      _currentStream = _client.generateResponse(request);
 
-      await for (final response in responseStream) {
+      await for (final response in _currentStream!) {
         if (response.textChunk.isNotEmpty) {
           yield response.textChunk;
         }
@@ -29,10 +32,20 @@ class AgentRpcService {
       }
     } catch (error) {
       yield 'Error: Lost connection to turtagent daemon';
+    } finally {
+      _currentStream = null;
+    }
+  }
+
+  Future<void> cancelCurrentStream() async {
+    if (_currentStream != null) {
+      await _currentStream!.cancel();
+      _currentStream = null;
     }
   }
 
   Future<void> shutdown() async {
+    await cancelCurrentStream();
     await _channel.shutdown();
   }
 }
