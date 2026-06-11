@@ -13,19 +13,62 @@ RUN dnf install -y \
     && dnf clean all
 RUN dnf install -y NetworkManager konsole dolphin firefox vim && dnf clean all
 
+RUN mkdir -p /etc/xdg
+
 # [ BRANDING ]
 RUN echo "tortugalinux" > /etc/hostname
 COPY branding/os-release /etc/os-release
 COPY branding/os-release /usr/lib/os-release
+
+RUN chafa branding/tortugalinux.png > /etc/fastfetch/tortuga.txt
+RUN mkdir -p /etc/neofetch
+COPY /etc/fastfetch/tortuga.txt /etc/neofetch/tortuga.txt
+
 RUN mkdir -p /usr/share/backgrounds/tortugalinux
-#COPY branding/wallpaper_min.png /usr/share/backgrounds/tortugalinux/default.png
-#COPY branding/sddm-theme/ /usr/share/sddm/themes/tortugalinux/
-#RUN echo -e "[Theme]\nCurrent=tortugalinux" > /etc/sddm.conf.d/branding.conf
+COPY branding/wallpaper_min.png /usr/share/backgrounds/tortugalinux/default.png
+
+COPY branding/sddm/ /usr/share/sddm/themes/tortugalinux/
+COPY branding/wallpaper_min.png /usr/share/sddm/themes/tortugalinux/background.png
+COPY branding/tortugalinux.png /usr/share/sddm/themes/tortugalinux/
+RUN mkdir -p /etc/sddm.conf.d
+RUN printf "[Theme]\nCurrent=tortugalinux\n" > /etc/sddm.conf.d/branding.conf
+
 RUN mkdir -p /usr/share/sounds/tortugalinux
 COPY branding/startup.wav /usr/share/sounds/tortugalinux/startup.wav
 COPY config/startup.desktop /etc/xdg/autostart/
+
+RUN mkdir -p /usr/share/anaconda
 COPY branding/tortugalinux.png /usr/share/pixmaps/tortugalinux.png
 COPY branding/tortugalinux.png /usr/share/icons/hicolor/256x256/apps/tortugalinux.png
+COPY branding/tortugalinux.png /usr/share/icons/hicolor/scalable/apps/start-here.png
+COPY branding/tortugalinux.png /usr/share/pixmaps/fedora-logo.png
+COPY branding/tortugalinux.png /usr/share/pixmaps/distributor-logo.png
+COPY branding/tortugalinux.png /usr/share/pixmaps/fedora-gdm-logo.png
+COPY branding/tortugalinux.png /usr/share/pixmaps/distributor-logo.png
+COPY branding/tortugalinux.png /usr/share/anaconda/pixmaps/product-logo.png
+
+RUN mkdir -p /usr/share/plymouth/themes/tortugalinux
+COPY branding/plymouth/tortugalinux.plymouth /usr/share/plymouth/themes/tortugalinux/
+COPY branding/plymouth/tortugalinux.script /usr/share/plymouth/themes/tortugalinux/
+COPY branding/tortugalinux.png /usr/share/plymouth/themes/tortugalinux/logo.png
+RUN sed -i 's/^Theme=.*/Theme=tortugalinux/' /usr/share/plymouth/plymouthd.defaults
+
+RUN mkdir -p /boot/grub2/themes/tortugalinux
+COPY branding/wallpaper_min.png /boot/grub2/themes/tortugalinux/background.png
+COPY branding/grub/theme.txt /boot/grub2/themes/tortugalinux/
+RUN echo 'GRUB_THEME="/boot/grub2/themes/tortugalinux/theme.txt"' > /etc/default/grub.d/tortugalinux.cfg
+RUN echo 'GRUB_DISTRIBUTOR="TortugaLinux"' \ >> /etc/default/grub
+
+RUN mkdir -p /usr/share/plasma/look-and-feel/org.tortuga.desktop
+COPY branding/plasma/ /usr/share/plasma/look-and-feel/org.tortuga.desktop/
+RUN printf "[KDE]\nLookAndFeelPackage=org.tortuga.desktop\n" > /etc/xdg/kdeglobals
+RUN printf "[KSplash]\nEngine=KSplashQML\nTheme=org.tortuga.desktop\n" > /etc/xdg/ksplashrc
+
+COPY branding/issue /etc/issue
+
+# [ FIREFOX ]
+RUN mkdir -p /etc/firefox/policies
+COPY config/firefox_policies.json /etc/firefox/policies/policies.json
 
 # [ FASTFETCH & NEOFETCH ]
 RUN mkdir -p /etc/fastfetch /etc/neofetch
@@ -33,4 +76,5 @@ COPY config/fastfetch.jsonc /etc/fastfetch/config.jsonc
 COPY config/neofetch.conf /etc/neofetch/config.conf
 
 # [ FINISH ]
+RUN rm -rf /run/* /var/log/* /var/lib/dnf/system-repo.lock
 RUN bootc container lint

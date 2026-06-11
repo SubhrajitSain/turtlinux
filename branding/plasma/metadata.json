@@ -1,0 +1,9 @@
+{
+    "KPlugin": {
+        "Id": "org.tortuga.desktop",
+        "Name": "TortugaLinux",
+        "Description": "TortugaLinux Splash Screen",
+        "Version": "1.0",
+        "License": "Apache-2.0"
+    }
+}

@@ -1,0 +1,22 @@
+screen_w = Window.GetWidth();
+screen_h = Window.GetHeight();
+
+logo = Image("/usr/share/pixmaps/tortugalinux.png");
+
+logo_w = logo.GetWidth();
+logo_h = logo.GetHeight();
+
+logo_sprite = Sprite(logo);
+
+logo_sprite.SetX((screen_w - logo_w) / 2);
+logo_sprite.SetY((screen_h - logo_h) / 2);
+
+fun refresh_callback() {
+    screen_w = Window.GetWidth();
+    screen_h = Window.GetHeight();
+
+    logo_sprite.SetX((screen_w - logo_w) / 2);
+    logo_sprite.SetY((screen_h - logo_h) / 2);
+}
+
+Plymouth.SetRefreshFunction(refresh_callback);

@@ -1,0 +1,11 @@
+[SddmGreeterTheme]
+Name=TortugaLinux
+Description=TortugaLinux Login Theme
+Author=Subhrajit Sain
+Copyright=(c) Subhrajit Sain
+License=Apache-2.0
+Type=sddm-theme
+Version=1.0
+MainScript=Main.qml
+Theme-Id=tortugalinux
+Theme-API=2.0

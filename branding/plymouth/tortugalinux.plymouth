@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=TortugaLinux
+Description=TortugaLinux Boot Splash
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/tortugalinux
+ScriptFile=/usr/share/plymouth/themes/tortugalinux/tortugalinux.script
