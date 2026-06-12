@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 
+class InputOverlayController {
+  void Function()? onEnd;
+}
+
 class InputOverlay extends StatefulWidget {
   final void Function(String) onPrompt;
+  final void Function() onStop;
 
-  const InputOverlay({super.key, required this.onPrompt});
+  final InputOverlayController inputOverlayController;
+
+  const InputOverlay({
+    super.key,
+    required this.onPrompt,
+    required this.inputOverlayController,
+    required this.onStop,
+  });
 
   @override
   State<InputOverlay> createState() => _InputOverlayState();
@@ -11,6 +23,13 @@ class InputOverlay extends StatefulWidget {
 
 class _InputOverlayState extends State<InputOverlay> {
   final TextEditingController _promptTextController = TextEditingController();
+  bool _isGenerating = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.inputOverlayController.onEnd = _onDone;
+  }
 
   @override
   void dispose() {
@@ -57,6 +76,7 @@ class _InputOverlayState extends State<InputOverlay> {
                     border: InputBorder.none,
                     fillColor: theme.colorScheme.surface,
                   ),
+                  onSubmitted: (value) => _onSend(),
                 ),
               ),
               IconButton(
@@ -64,10 +84,15 @@ class _InputOverlayState extends State<InputOverlay> {
                 icon: const Icon(Icons.mic),
                 color: theme.colorScheme.onSurface,
               ),
-              IconButton.filled(
-                onPressed: _onSend,
-                icon: const Icon(Icons.send),
-              ),
+              _isGenerating
+                  ? IconButton.filledTonal(
+                      onPressed: _onStop,
+                      icon: const Icon(Icons.stop),
+                    )
+                  : IconButton.filled(
+                      onPressed: _onSend,
+                      icon: const Icon(Icons.send),
+                    ),
             ],
           ),
         ),
@@ -77,5 +102,22 @@ class _InputOverlayState extends State<InputOverlay> {
 
   void _onSend() {
     widget.onPrompt(_promptTextController.text);
+    _setGeneratingState(true);
+    _promptTextController.clear();
+  }
+
+  void _onStop() {
+    widget.onStop();
+    _setGeneratingState(false);
+  }
+
+  void _onDone() {
+    _setGeneratingState(false);
+  }
+
+  void _setGeneratingState(bool state) {
+    setState(() {
+      _isGenerating = state;
+    });
   }
 }

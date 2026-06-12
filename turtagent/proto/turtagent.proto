@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package turtagent;
+package dev.ingstudios.turtlinux.turtagent;
 
 option go_package = "./protobuf";
 

@@ -63,6 +63,7 @@ func (r *OllamaRequest) GenerateFromText(message string, sendChunk func(string, 
 	req := &api.GenerateRequest{
 		Model:  r.Model,
 		Prompt: message,
+		Think:  &api.ThinkValue{Value: true},
 	}
 
 	respFunc := func(resp api.GenerateResponse) error {
