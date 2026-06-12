@@ -51,7 +51,6 @@ class _AgentOverlayState extends State<AgentOverlay> {
   }
 
   void _onStop() {
-    print('On stop in agent overlay.');
     _responseStreamSubscription.cancel();
     _agentRpcService.cancelCurrentStream();
     _agentRpcService.shutdown();

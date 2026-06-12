@@ -102,18 +102,22 @@ class _InputOverlayState extends State<InputOverlay> {
 
   void _onSend() {
     widget.onPrompt(_promptTextController.text);
-    setState(() {
-      _isGenerating = true;
-    });
+    _setGeneratingState(true);
+    _promptTextController.clear();
   }
 
   void _onStop() {
-    print('On stop called.');
     widget.onStop();
-    _isGenerating = false;
+    _setGeneratingState(false);
   }
 
   void _onDone() {
-    _isGenerating = false;
+    _setGeneratingState(false);
+  }
+
+  void _setGeneratingState(bool state) {
+    setState(() {
+      _isGenerating = state;
+    });
   }
 }

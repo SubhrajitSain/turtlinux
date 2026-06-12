@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 
 class ResponseOverlay extends StatelessWidget {
   final Stream<String> responseStream;
@@ -38,7 +39,8 @@ class ResponseOverlay extends StatelessWidget {
                         maxHeight: screenHeight * 0.5,
                       ),
                       child: SingleChildScrollView(
-                        child: Text(currentResponse),
+                        reverse: true,
+                        child: MarkdownBody(data: currentResponse),
                       ),
                     ),
                   ),
