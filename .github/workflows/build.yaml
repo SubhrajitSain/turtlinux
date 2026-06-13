@@ -32,3 +32,9 @@ jobs:
           IMAGE_PATH=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           podman build -f Containerfile.min -t $IMAGE_PATH:min .
           podman push $IMAGE_PATH:min
+
+      - name: Build and Push TortugaLinux Installer
+        run: |
+          IMAGE_PATH=$(echo "ghcr.io/${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          podman build -f installer/Containerfile -t $IMAGE_PATH:installer .
+          podman push $IMAGE_PATH:installer

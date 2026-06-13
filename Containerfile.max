@@ -23,6 +23,9 @@ RUN mkdir -p /etc/xdg
 
 # [ BRANDING ]
 RUN echo "tortugalinux" > /etc/hostname
+RUN mkdir -p /etc/NetworkManager/conf.d
+RUN printf "[main]\nhostname-mode=none\n" > /etc/NetworkManager/conf.d/99-hostname.conf
+RUN echo "PRETTY_HOSTNAME=TortugaLinux" > /etc/machine-info
 COPY branding/os-release /etc/os-release
 COPY branding/os-release /usr/lib/os-release
 
@@ -31,6 +34,15 @@ COPY branding/wallpaper_max.png /usr/share/backgrounds/tortugalinux/default.png
 
 COPY branding/sddm/ /usr/share/sddm/themes/tortugalinux/
 COPY branding/wallpaper_max.png /usr/share/sddm/themes/tortugalinux/background.png
+
+RUN ln -sf /usr/share/backgrounds/tortugalinux/default.png /usr/share/backgrounds/default.png && \
+    ln -sf /usr/share/backgrounds/tortugalinux/default.png /usr/share/backgrounds/images/default.png
+
+RUN mkdir -p /usr/share/plasma/look-and-feel/org.tortuga.desktop/contents/layouts
+RUN printf "[Wallpaper][org.kde.image][General]\nImage=file:///usr/share/backgrounds/tortugalinux/default.png\n" > /usr/share/plasma/look-and-feel/org.tortuga.desktop/contents/layouts/org.kde.plasma.desktop-appletsrc
+RUN printf "[KDE]\nLookAndFeelPackage=org.tortuga.desktop\n" > /etc/xdg/kdeglobals
+RUN printf '{\n  "KPlugin": {\n    "Description": "TortugaLinux System Theme",\n    "Id": "org.tortuga.desktop",\n    "Name": "TortugaLinux"\n  }\n}' > /usr/share/plasma/look-and-feel/org.tortuga.desktop/metadata.json
+
 COPY branding/tortugalinux.png /usr/share/sddm/themes/tortugalinux/
 RUN mkdir -p /etc/sddm.conf.d
 RUN printf "[Theme]\nCurrent=tortugalinux\n" > /etc/sddm.conf.d/branding.conf
@@ -48,11 +60,14 @@ COPY branding/tortugalinux.png /usr/share/pixmaps/distributor-logo.png
 COPY branding/tortugalinux.png /usr/share/pixmaps/fedora-gdm-logo.png
 COPY branding/tortugalinux.png /usr/share/pixmaps/distributor-logo.png
 COPY branding/tortugalinux.png /usr/share/anaconda/pixmaps/product-logo.png
+COPY branding/tortugalinux.svg /usr/share/icons/hicolor/scalable/apps/fedora-logo-icon.svg
+COPY branding/tortugalinux.svg /usr/share/icons/hicolor/scalable/apps/start-here.svg
+COPY branding/tortugalinux.svg /usr/share/icons/hicolor/scalable/apps/distributor-logo-fedora.svg
 
 RUN mkdir -p /etc/fastfetch /etc/neofetch
 RUN touch /etc/fastfetch/tortuga.txt
 RUN touch /etc/neofetch/tortuga.txt
-RUN chafa /usr/share/pixmaps/tortugalinux.png > /etc/fastfetch/tortuga.txt
+RUN chafa -c full /usr/share/pixmaps/tortugalinux.png > /etc/fastfetch/tortuga.txt
 RUN cp /etc/fastfetch/tortuga.txt /etc/neofetch/tortuga.txt
 
 RUN mkdir -p /usr/share/plymouth/themes/tortugalinux
@@ -87,6 +102,9 @@ COPY config/firefox_policies.json /etc/firefox/policies/policies.json
 RUN mkdir -p /etc/fastfetch /etc/neofetch
 COPY config/fastfetch.jsonc /etc/fastfetch/config.jsonc
 COPY config/neofetch.conf /etc/neofetch/config.conf
+
+# [ FLATHUB REPOSITORY ]
+RUN flatpak remote-add --system --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # [ FINISH ]
 RUN bootc container lint

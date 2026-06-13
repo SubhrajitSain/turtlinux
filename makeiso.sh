@@ -42,18 +42,26 @@ case "$choice" in
         ;;
 esac
 
+INSTALLER_IMAGE="ghcr.io/subhrajitsain/tortugalinux:installer"
+
 echo ""
 echo -e "${GREEN}Flavor: ${LIGHT_GREEN}${FLAVOR_NAME}${NC}"
 echo -e "${GREEN}Source: ${LIGHT_GREEN}${TARGET_IMAGE}${NC}"
+echo -e "${GREEN}Installer: ${LIGHT_GREEN}${INSTALLER_IMAGE}${NC}"
 echo -e "${GREEN}Running pre-download prerequisites...${NC}"
 
 sudo podman system migrate
 
-echo -e "${GREEN}Pulling TortugaLinux image from source...${NC}"
+echo -e "${GREEN}Pulling TortugaLinux payload and installer from source...${NC}"
 echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
 
 if ! sudo podman pull "$TARGET_IMAGE"; then
-    echo -e "${RED}Error: Failed to pull image $TARGET_IMAGE. Aborting.${NC}"
+    echo -e "${RED}Error: Failed to pull OS payload image $TARGET_IMAGE. Aborting.${NC}"
+    exit 1
+fi
+
+if ! sudo podman pull "$INSTALLER_IMAGE"; then
+    echo -e "${RED}Error: Failed to pull installer image $INSTALLER_IMAGE. Aborting.${NC}"
     exit 1
 fi
 
@@ -61,7 +69,7 @@ echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
 echo -e "${GREEN}Making your TortugaLinux ISO...${NC}"
 echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
 
-if sudo podman run --rm -it --privileged -v ./iso:/iso -v /var/lib/containers/storage:/var/lib/containers/storage quay.io/centos-bootc/bootc-image-builder:latest --type iso --rootfs btrfs --output /iso "$TARGET_IMAGE"
+if sudo podman run --rm -it --privileged -v ./iso:/iso -v /var/lib/containers/storage:/var/lib/containers/storage quay.io/centos-bootc/bootc-image-builder:latest --type bootc-installer --rootfs btrfs --output /iso --bootc-installer-payload-ref "$TARGET_IMAGE" "$INSTALLER_IMAGE"
 then
     echo -e "${LIGHT_GREEN}-----------------------------------------------${NC}"
     echo -e "${GREEN}Cleaning up...${NC}"

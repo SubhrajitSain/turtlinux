@@ -1,0 +1,26 @@
+FROM quay.io/fedora/fedora-bootc:latest
+
+RUN dnf install -y \
+    anaconda \
+    anaconda-install-env-deps \
+    anaconda-dracut \
+    dracut-config-generic \
+    dracut-network \
+    net-tools \
+    squashfs-tools \
+    grub2-efi-x64-cdboot \
+    python3-mako \
+    lorax-templates-* \
+    biosdevname \
+    prefixdevname \
+    gtk3 \
+    adwaita-icon-theme \
+    && dnf clean all
+
+COPY branding/os-release /etc/os-release
+COPY branding/tortugalinux.png /usr/share/anaconda/pixmaps/product-logo.png
+COPY branding/issue /etc/issue
+COPY installer/custom.css /usr/share/anaconda/fedora.css
+RUN mkdir -p /var/mnt /var/log/anaconda
+
+RUN bootc container lint
